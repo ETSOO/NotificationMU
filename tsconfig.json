@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        /* Visit https://aka.ms/tsconfig.json to read more about this file */
+        "target": "ES6",
+        "allowJs": true,
+        "module": "ES6",
+        "moduleResolution": "node",
+        "isolatedModules": true,
+        "outDir": "./lib",
+        "noEmit": false,
+        "declaration": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "jsx": "react",
+        "forceConsistentCasingInFileNames": true
+    },
+    "include": ["src"]
+}
