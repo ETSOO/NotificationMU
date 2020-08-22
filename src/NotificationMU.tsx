@@ -256,7 +256,7 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
             : (NotificationType[type].toLowerCase() as Color);
 
     return (
-        <Snackbar open={true} TransitionComponent={Fade}>
+        <Fade in={true}>
             <Alert
                 key={id}
                 severity={severity}
@@ -266,7 +266,7 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
                 {title && <AlertTitle>{title}</AlertTitle>}
                 {content}
             </Alert>
-        </Snackbar>
+        </Fade>
     );
 }
 
