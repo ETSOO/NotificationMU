@@ -39,6 +39,11 @@ const useStyles = makeStyles((theme) => ({
         '& h2': {
             paddingLeft: theme.spacing(1)
         }
+    },
+    loadingBox: {
+        '& >*:not(:first-child)': {
+            marginTop: theme.spacing(1)
+        }
     }
 }));
 
@@ -92,6 +97,7 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
                     flexDirection="column"
                     flexWrap="nowrap"
                     alignItems="center"
+                    className={classes.loadingBox}
                 >
                     <CircularProgress color="primary" />
                     <Box>{content}</Box>
