@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Snackbar, makeStyles } from '@material-ui/core';
+import { Box, Snackbar, makeStyles, Theme } from '@material-ui/core';
 import { DomUtils } from '@etsoo/shared';
 import {
     NotificationDisplay,
@@ -61,12 +61,17 @@ function getOrigin(align: NotificationAlign): origin | undefined {
 }
 
 // Style
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles<Theme, { gap: number }>((theme) => ({
     screenCenter: {
         position: 'fixed',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)'
+    },
+    listBox: {
+        '& >*:not(:first-child)': {
+            marginTop: ({ gap }) => theme.spacing(gap)
+        }
     }
 }));
 
@@ -74,15 +79,23 @@ const useStyles = makeStyles(() => ({
  *
  */
 export interface NotificationDisplayMUProps
-    extends Omit<NotificationDisplayProps, 'createContainer'> {}
+    extends Omit<NotificationDisplayProps, 'createContainer'> {
+    /**
+     * Items' gap
+     */
+    gap?: number;
+}
 
 /**
  * Material-UI version of notification display
  * @param props Properties
  */
 export function NotificationDisplayMU(props: NotificationDisplayMUProps) {
+    // Destruct
+    const { gap = 1, ...rests } = props;
+
     // Style
-    const classes = useStyles();
+    const classes = useStyles({ gap });
 
     // Align group container creator
     const createContainer = (
@@ -112,12 +125,17 @@ export function NotificationDisplayMU(props: NotificationDisplayMUProps) {
                 key={align}
                 open
             >
-                <Box display="flex" flexDirection="column" flexWrap="nowrap">
+                <Box
+                    display="flex"
+                    flexDirection="column"
+                    flexWrap="nowrap"
+                    className={classes.listBox}
+                >
                     {children}
                 </Box>
             </Snackbar>
         );
     };
 
-    return <NotificationDisplay createContainer={createContainer} {...props} />;
+    return <NotificationDisplay createContainer={createContainer} {...rests} />;
 }

@@ -14,7 +14,8 @@ import {
     Paper,
     PaperProps,
     TextField,
-    IconButton
+    IconButton,
+    Fade
 } from '@material-ui/core';
 import { Alert, AlertTitle, Color } from '@material-ui/lab';
 import { Close, Error, Info, Help } from '@material-ui/icons';
@@ -234,6 +235,7 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
                 open={true}
                 message={content}
                 className={className}
+                TransitionComponent={Fade}
                 action={
                     <IconButton
                         size="small"
@@ -254,15 +256,17 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
             : (NotificationType[type].toLowerCase() as Color);
 
     return (
-        <Alert
-            key={id}
-            severity={severity}
-            variant="filled"
-            onClose={() => returnValue(undefined)}
-        >
-            {title && <AlertTitle>{title}</AlertTitle>}
-            {content}
-        </Alert>
+        <Snackbar open={true} TransitionComponent={Fade}>
+            <Alert
+                key={id}
+                severity={severity}
+                variant="filled"
+                onClose={() => returnValue(undefined)}
+            >
+                {title && <AlertTitle>{title}</AlertTitle>}
+                {content}
+            </Alert>
+        </Snackbar>
     );
 }
 
