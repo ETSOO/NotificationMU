@@ -1,138 +1,100 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
-import { NotificationDisplay } from '../src/NotificationDisplay';
-import { NotificationReact } from '../src/NotificationReact';
+import { NotificationDisplayMU } from '../src/NotificationDisplayMU';
+import { NotificationMU } from '../src/NotificationMU';
 import {
     NotificationContainer,
     NotificationType,
     NotificationAlign
 } from '@etsoo/notificationbase';
-import Enzyme, { shallow } from 'enzyme';
+import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-
-// Class implementation for tests
-class NotificationReactTest extends NotificationReact {
-    /**
-     * Render method
-     * @param className Style class name
-     */
-    render(className?: string) {
-        return (
-            <div key={this.id} className={className}>
-                {this.content}
-            </div>
-        );
-    }
-}
+import { createMount } from '@material-ui/core/test-utils';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core';
+import { act } from 'react-dom/test-utils';
 
 // Timer mock
 // https://jestjs.io/docs/en/timer-mocks
 jest.useFakeTimers();
 
+// Labels
+const labels = {
+    confirm: 'Confirm',
+    error: 'Error',
+    no: 'No',
+    ok: 'OK',
+    yes: 'Yes'
+};
+
 // Test notification display component
+// Theme is necessary for rendering
+const theme = createMuiTheme({});
 const displayUI = (
-    <NotificationDisplay
-        createContainer={(align, children) => {
-            return (
-                <div
-                    key={align}
-                    className={NotificationAlign[align].toLowerCase()}
-                >
-                    {children}
-                </div>
-            );
-        }}
-        className="test"
-        itemClassName="item"
-    />
+    <ThemeProvider theme={theme}>
+        <NotificationDisplayMU
+            className="container"
+            itemClassName="item"
+            labels={labels}
+        />
+    </ThemeProvider>
 );
 
-test('Tests for NotificationUI with react-test-renderer', () => {
+// Setup adapter
+Enzyme.configure({ adapter: new Adapter() });
+
+describe('Tests for NotificationMU', () => {
     // Arrange
-    // Render the UI in the document
-    const ui = renderer.create(displayUI);
+    const mount = createMount();
 
-    // Notification object
-    const notification = new NotificationReactTest(
-        NotificationType.Loading,
-        'Loading...'
-    );
-    notification.timespan = 3;
-
-    const childrenBefore = ui.root.findAllByProps(
-        { className: 'item' },
-        { deep: true }
-    );
-    expect(childrenBefore.length).toBe(0);
-
-    // Rerenderer test
-    // https://reactjs.org/docs/test-utils.html#act
-    renderer.act(() => {
-        // Add the notification
-        NotificationContainer.add(notification);
+    // Clearup when done
+    afterAll(() => {
+        mount.cleanUp();
     });
 
-    // setTimeout should be called 1 time
-    expect(setTimeout).toBeCalled();
+    // Wrap
+    const wrapper = mount(displayUI);
 
-    // The child added
-    const children = ui.root.findAllByProps(
-        { className: 'item' },
-        { deep: true }
-    );
-    expect(children.length).toBe(1);
+    // Container
+    const container = wrapper.find('div.container').first();
 
-    renderer.act(() => {
-        // Fast forward
-        // Remove the child
-        jest.runOnlyPendingTimers();
+    it('Align groups match', () => {
+        // Object.keys(Enum) will return string and number keys
+        expect(container.children().length).toBe(
+            Object.keys(NotificationAlign).length / 2
+        );
+
+        // Test one align group
+        expect(container.find('div.align-unknown').length).toBe(1);
     });
 
-    const childrenNow = ui.root.findAllByProps(
-        { className: 'item' },
-        { deep: true }
-    );
+    it('Add new notification', () => {
+        // Notification object
+        const notification = new NotificationMU(
+            NotificationType.Loading,
+            'Loading...'
+        );
+        notification.timespan = 3;
 
-    expect(childrenNow.length).toBe(0);
-});
+        // Unknown align group
+        const unknownGroup = container.find('div.align-unknown').first();
 
-test('Tests for NotificationUI with enzyme', () => {
-    // Arrange
+        // https://reactjs.org/docs/test-utils.html#act
+        act(() => {
+            // Add the notification
+            NotificationContainer.add(notification);
+        });
 
-    // Setup adapter
-    Enzyme.configure({ adapter: new Adapter() });
+        // Assert
+        expect(unknownGroup.text()).toBe('Loading...');
 
-    // Render the UI in the document
-    const ui = shallow(displayUI);
+        act(() => {
+            // Fast forward
+            // Remove the child
+            jest.runOnlyPendingTimers();
+        });
 
-    // Align groups
-    // Object.keys(Enum) will return string and number keys
-    expect(ui.children().length).toBe(
-        Object.keys(NotificationAlign).length / 2
-    );
-
-    expect(ui.children().children('.item').length).toBe(0);
-
-    // Notification object
-    const notification = new NotificationReactTest(
-        NotificationType.Loading,
-        'Loading...'
-    );
-    notification.timespan = 3;
-
-    // Add the notification
-    NotificationContainer.add(notification);
-
-    ui.update();
-    expect(ui.children().children('.item').length).toBe(1);
-    expect(ui.children().children('.item').text()).toBe('Loading...');
-
-    // Fast forward
-    // Remove the child
-    jest.runOnlyPendingTimers();
-
-    ui.update();
-    expect(ui.children().children('.item').length).toBe(0);
+        // Assert
+        expect(unknownGroup.text()).toBe('');
+    });
 });
 
 jest.clearAllTimers();

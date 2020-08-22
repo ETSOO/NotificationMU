@@ -1,3 +1,3 @@
-export * from './NotificationDisplay';
-export * from './NotificationReact';
-export * from '@etsoo/notificationbase';
+export * from './NotificationDisplayMU';
+export * from './NotificationMU';
+export * from '@etsoo/notificationui';
