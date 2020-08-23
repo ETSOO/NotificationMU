@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Snackbar, makeStyles, Theme } from '@material-ui/core';
-import { DomUtils } from '@etsoo/shared';
+import { DataTypes } from '@etsoo/shared';
 import {
     NotificationDisplay,
     NotificationDisplayProps,
@@ -10,7 +10,7 @@ import {
 // Origin constructor generics
 interface origin {
     vertical: 'top' | 'bottom';
-    horizontal: DomUtils.HorizontalAlign;
+    horizontal: DataTypes.HAlign;
 }
 
 // Calculate origin from align property
