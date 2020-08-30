@@ -77,7 +77,7 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
         align,
         content,
         id,
-        inputProps,
+        inputProps = {},
         modal,
         onDismiss,
         onReturn,
@@ -100,7 +100,9 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
                     className={classes.loadingBox}
                 >
                     <CircularProgress color="primary" />
-                    <Box>{content}</Box>
+                    <Box width="75%" maxWidth={640}>
+                        {content}
+                    </Box>
                 </Box>
             </Backdrop>
         );
@@ -226,7 +228,7 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
                         onClick={() => returnValue(undefined)}
                         autoFocus
                     >
-                        {labels.ok || 'OK'}
+                        {inputProps.buttonLabel || labels.ok || 'OK'}
                     </Button>
                 </DialogActions>
             </Dialog>

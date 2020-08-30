@@ -1,7 +1,7 @@
 {
     "name": "@etsoo/notificationmu",
-    "version": "1.0.5",
-    "description": "TypeScript Material-UI version of the notification component",
+    "version": "1.0.6",
+    "description": "TypeScript React + Material-UI template project working with SmartERP APIs",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "scripts": {
@@ -41,8 +41,8 @@
     },
     "homepage": "https://github.com/ETSOO/NotificationBase#readme",
     "dependencies": {
-        "@etsoo/notificationui": "^1.0.25",
-        "@etsoo/shared": "^1.0.4",
+        "@etsoo/notificationui": "^1.0.26",
+        "@etsoo/shared": "^1.0.5",
         "@material-ui/core": "^4.11.0",
         "@material-ui/icons": "^4.9.1",
         "@material-ui/lab": "^4.0.0-alpha.56",
