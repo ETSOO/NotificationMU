@@ -114,9 +114,10 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
     };
 
     // On return
+    // Dismiss first, then run callback
     const returnValue = (value: any) => {
-        if (onReturn) onReturn(value);
         dismiss();
+        if (onReturn) onReturn(value);
     };
 
     const inputRef = React.useRef<HTMLInputElement>();
