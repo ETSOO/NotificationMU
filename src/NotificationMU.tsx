@@ -74,13 +74,12 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
     // Destruct
     const { className, labels = {} } = props;
     const {
-        align,
         content,
         id,
         inputProps = {},
-        modal,
         onDismiss,
         onReturn,
+        open,
         type
     } = props.host;
     let { title } = props.host;
@@ -90,7 +89,7 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
         return (
             <Backdrop
                 className={DomUtils.mergeClasses(className, classes.backdrop)}
-                open
+                open={open}
             >
                 <Box
                     display="flex"
@@ -138,7 +137,12 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
         }
 
         return (
-            <Dialog open PaperComponent={PaperComponent} className={className}>
+            <Dialog
+                open={open}
+                PaperComponent={PaperComponent}
+                className={className}
+                disablePortal
+            >
                 <DialogTitle
                     disableTypography
                     className={classes.iconTitle}
@@ -175,7 +179,12 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
         }
 
         return (
-            <Dialog open PaperComponent={PaperComponent} className={className}>
+            <Dialog
+                open={open}
+                PaperComponent={PaperComponent}
+                className={className}
+                disablePortal
+            >
                 <DialogTitle
                     disableTypography
                     className={classes.iconTitle}
@@ -211,7 +220,12 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
         }
 
         return (
-            <Dialog open PaperComponent={PaperComponent} className={className}>
+            <Dialog
+                open={open}
+                PaperComponent={PaperComponent}
+                className={className}
+                disablePortal
+            >
                 <DialogTitle
                     disableTypography
                     className={classes.iconTitle}
@@ -241,7 +255,7 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
         return (
             <Snackbar
                 key={id}
-                open={true}
+                open={open}
                 message={content}
                 className={className}
                 TransitionComponent={Fade}
@@ -257,6 +271,10 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
                 }
             ></Snackbar>
         );
+    }
+
+    if (!open) {
+        return <></>;
     }
 
     const severity =

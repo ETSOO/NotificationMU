@@ -41,9 +41,12 @@ const displayUI = (
 // Setup adapter
 Enzyme.configure({ adapter: new Adapter() });
 
+// For fake timers
+jest.useFakeTimers();
+
 describe('Tests for NotificationMU', () => {
     // Arrange
-    const mount = createMount();
+    const mount = createMount({ strict: false });
 
     // Clearup when done
     afterAll(() => {
@@ -56,6 +59,9 @@ describe('Tests for NotificationMU', () => {
     // Container
     const container = wrapper.find('div.container').first();
 
+    // Modal container
+    const modalContainer = container.find('div.align-unknown').first();
+
     it('Align groups match', () => {
         // Object.keys(Enum) will return string and number keys
         expect(container.children().length).toBe(
@@ -63,37 +69,51 @@ describe('Tests for NotificationMU', () => {
         );
 
         // Test one align group
-        expect(container.find('div.align-unknown').length).toBe(1);
+        expect(modalContainer).not.toBeUndefined();
     });
 
-    it('Add new notification', () => {
-        // Notification object
+    it('Add new notification', (done) => {
+        // Confirm
         const notification = new NotificationMU(
-            NotificationType.Loading,
-            'Loading...'
+            NotificationType.Confirm,
+            'Are you sure to continue?'
         );
-        notification.timespan = 3;
+        notification.onReturn = (value) => {
+            if (value) {
+                // Notification loading
+                const notificationLoading = new NotificationMU(
+                    NotificationType.Loading,
+                    'Loading...'
+                );
 
-        // Unknown align group
-        const unknownGroup = container.find('div.align-unknown').first();
+                act(() => {
+                    // Add the loading notification
+                    NotificationContainer.add(notificationLoading);
+
+                    // Fast forward
+                    jest.runOnlyPendingTimers();
+
+                    // Tests need here
+                });
+            }
+            done();
+        };
 
         // https://reactjs.org/docs/test-utils.html#act
         act(() => {
             // Add the notification
             NotificationContainer.add(notification);
-        });
 
-        // Assert
-        expect(unknownGroup.text()).toBe('Loading...');
-
-        act(() => {
             // Fast forward
-            // Remove the child
             jest.runOnlyPendingTimers();
         });
 
-        // Assert
-        expect(unknownGroup.text()).toBe('');
+        // 'Yes' button
+        const buttonYes = document.getElementsByTagName('button')[1];
+        expect(buttonYes).not.toBeNull();
+
+        // Click it
+        buttonYes.click();
     });
 });
 

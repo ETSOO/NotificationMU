@@ -102,8 +102,12 @@ export function NotificationDisplayMU(props: NotificationDisplayMUProps) {
         align: NotificationAlign,
         children: React.ReactNode[]
     ) => {
-        // Each align group, class equal to something similar to 'display-topleft'
+        // Each align group, class equal to something similar to 'align-topleft'
         let className = `align-${NotificationAlign[align].toLowerCase()}`;
+
+        if (children.length === 0) {
+            return <div key={align} className={className} />;
+        }
 
         if (align === NotificationAlign.Unknown) {
             // div container for style control
