@@ -72,17 +72,9 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
     const classes = useStyles();
 
     // Destruct
-    const { className, labels = {} } = props;
-    const {
-        content,
-        id,
-        inputProps = {},
-        onDismiss,
-        onReturn,
-        open,
-        type
-    } = props.host;
-    let { title } = props.host;
+    const { className, labels = {}, host } = props;
+    const { content, id, inputProps = {}, onReturn, open, type } = host;
+    let { title } = host;
 
     // Loading bar
     if (type === NotificationType.Loading) {
@@ -109,7 +101,7 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
 
     // On dismiss
     const dismiss = () => {
-        if (onDismiss) onDismiss();
+        host.dismiss();
     };
 
     // On return
