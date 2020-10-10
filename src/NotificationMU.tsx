@@ -141,7 +141,6 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
                 open={open}
                 PaperComponent={PaperComponent}
                 className={className}
-                disablePortal
             >
                 <DialogTitle
                     disableTypography
@@ -183,7 +182,6 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
                 open={open}
                 PaperComponent={PaperComponent}
                 className={className}
-                disablePortal
             >
                 <DialogTitle
                     disableTypography
@@ -224,7 +222,6 @@ function NotificationMUCreator(props: NotificationMUCreatorProps) {
                 open={open}
                 PaperComponent={PaperComponent}
                 className={className}
-                disablePortal
             >
                 <DialogTitle
                     disableTypography

@@ -73,47 +73,58 @@ describe('Tests for NotificationMU', () => {
     });
 
     it('Add new notification', (done) => {
+        // Notification loading
+        const notificationLoading = new NotificationMU(
+            NotificationType.Loading,
+            'Loading...'
+        );
+
+        // https://reactjs.org/docs/test-utils.html#act
+        act(() => {
+            // Add the notification
+            NotificationContainer.add(notificationLoading);
+
+            // Fast forward
+            jest.runOnlyPendingTimers();
+        });
+
+        act(() => {
+            // Dismiss loading notification
+            notificationLoading.dismiss();
+
+            // Fast forward
+            jest.runOnlyPendingTimers();
+        });
+
         // Confirm
         const notification = new NotificationMU(
-            NotificationType.Confirm,
-            'Are you sure to continue?'
+            NotificationType.Error,
+            'Error found'
         );
         notification.onReturn = (value) => {
-            if (value) {
-                // Notification loading
-                const notificationLoading = new NotificationMU(
-                    NotificationType.Loading,
-                    'Loading...'
-                );
+            expect(value).toBeUndefined();
 
-                act(() => {
-                    // Add the loading notification
-                    NotificationContainer.add(notificationLoading);
+            // Fast forward
+            jest.runOnlyPendingTimers();
 
-                    // Fast forward
-                    jest.runOnlyPendingTimers();
-
-                    // Tests need here
-                });
-            }
             done();
         };
 
         // https://reactjs.org/docs/test-utils.html#act
         act(() => {
-            // Add the notification
+            // Add error notification
             NotificationContainer.add(notification);
 
             // Fast forward
             jest.runOnlyPendingTimers();
         });
 
-        // 'Yes' button
-        const buttonYes = document.getElementsByTagName('button')[1];
-        expect(buttonYes).not.toBeNull();
+        // 'OK' button
+        const buttonOK = document.getElementsByTagName('button')[0];
+        expect(buttonOK).not.toBeUndefined();
 
         // Click it
-        buttonYes.click();
+        buttonOK.click();
     });
 });
 
